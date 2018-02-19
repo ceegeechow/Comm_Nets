@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-//#include <netinet/ip.h>
+#include <netinet/in.h>
 
 //checks if port on given address is open
 bool port_is_open(const struct sockaddr_in addr)
@@ -60,8 +60,18 @@ int main (int argc, char** argv)
 	struct sockaddr_in server;
 	struct hostent *he;
 	he = gethostbyname(hostname);
-	memcpy(&server.sin_addr, he->h_addr_list[0], he->h_length);
+	memcpy((char*)&server.sin_addr, (char*)he->h_addr, he->h_length);
   	server.sin_family = AF_INET;
+  	
+  // 	server.sin_port = htons(1);
+  // 	int sfd = socket(AF_INET, SOCK_STREAM, 0); //TCP socket
+  //   if ((connect(sfd, (struct sockaddr *) &server, sizeof(server))) == 0)
+  //   {
+		// std::cout << "works!\n";
+  //   }
+  //   else {
+  //   	std::cout << "closed :(\n";
+  //   }
 
   	std::cout<< "Starting scan of ports " << start << " through " << stop << "\n";
 
