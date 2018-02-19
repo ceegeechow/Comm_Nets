@@ -6,13 +6,18 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+//#include <netinet/ip.h>
 
 //checks if port on given address is open
 bool port_is_open(const struct sockaddr_in addr)
 {
-    int sfd = socket(AF_INET, SOCK_DGRAM, 6); 		//SOCK_DGRAM??? use getprotoent or 0??
+    int sfd = socket(AF_INET, SOCK_STREAM, 0); //TCP socket
     if ((connect(sfd, (struct sockaddr *) &addr, sizeof(addr))) == 0)
+    {
+		close(sfd);
 		return true;
+    }
+    close(sfd);
 	return false;
 }
 
@@ -27,7 +32,7 @@ int main (int argc, char** argv)
 	if (argc <= 1)
 	{
 		std::cerr << "Error: Not enough input arguments\n";
-		exit(0);
+		return -1;
 	}
 
 	//parse input arguments
@@ -44,7 +49,7 @@ int main (int argc, char** argv)
 	if (optind >= argc)
 	{
 		std::cerr << "No hostname specified\n";
-		exit(0);
+		return -1;
 	}
 	else
 	{
